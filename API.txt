@@ -1,0 +1,18 @@
+Done! Congratulations on your new bot. You will find it at t.me/choix_cine_bot. You can now add a description, about section and profile picture for your bot, see /help for a list of commands. By the way, when you've finished creating your cool bot, ping our Bot Support if you want a better username for it. Just make sure the bot is fully operational before you do this.
+
+Use this token to access the HTTP API:
+8155720774:AAGq8xWP9ut56knT_ACoV3uQCojcHF-BDp4
+Keep your token secure and store it safely, it can be used by anyone to control your bot.
+
+For a description of the Bot API, see this page: https://core.telegram.org/bots/api
+
+
+
+CODICI PER PRENDE I DATI DAL SITO 
+NOME 
+<span class="hero__primary-text" data-testid="hero__primary-text">Mufasa - Il re leone</span>
+<h1 textlength="20" data-testid="hero__pageTitle" class="sc-ec65ba05-0 dUhRgT"><span class="hero__primary-text" data-testid="hero__primary-text">Mufasa - Il re leone</span></h1>
+DURATA
+
+TIPO
+CAST

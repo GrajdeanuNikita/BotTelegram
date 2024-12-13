@@ -9,5 +9,7 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="mysql.connector.java" level="project" />
     <orderEntry type="library" name="jsoup" level="project" />
+    <orderEntry type="library" name="telegram.telegrambots.abilities" level="project" />
+    <orderEntry type="library" name="telegram.telegrambots.chat.session.bot" level="project" />
   </component>
 </module>

@@ -15,7 +15,9 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.List;
+
 
 public class Bot extends TelegramLongPollingBot {
 
@@ -34,11 +36,15 @@ public class Bot extends TelegramLongPollingBot {
             } else{
                 switch (TestoMessaggio.toLowerCase()){
                     case "cerchiamo un film!":
-                        sendReplyWithInlineButtons(chatId,"Che genere vuoi? " +
+                        sendReplyWithInlineButtons(chatId, "Che genere vuoi? " +
                                         "puoi scegliere tra: ",
-                                List.of("Azione", "Avventura", "Animazione", "Biografico", "Commedia" , "Crimine" +
-                                        "Documentario", "Drammatico" , "Famiglia", "Fantasy", "Film-noir","Storico", "Horror"+
-                                        "Musical", "Mistero", "Romantico", "Fantascienza", "Sportivo", "Thriller"));
+                                List.of("Azione", "Avventura", "Animazione", "Biografico", "Commedia",
+                                        "Poliziesco", "Documentario", "Drammatico", "Per famiglie",
+                                        "Fantastico", "Noir", "Giochi a premi televisivo", "Storico",
+                                        "Horror", "Musica", "Musical", "Giallo", "Telegiornale",
+                                        "Reality", "Sentimentale", "Fantascienza", "Cortometraggio",
+                                        "Sportivo", "Talk Show", "Thriller", "Guerra", "Western"));
+
                         break;
                     case "Film Da vedere":
                         //  MOSTREA DATABASE CON I FILM VISTIù
@@ -54,11 +60,15 @@ public class Bot extends TelegramLongPollingBot {
 
             switch (callbackData.toLowerCase()){
                 case "cerchiamo un film!":
-                    sendReplyWithInlineButtons(chatId,"Che genere vuoi? " +
+                    sendReplyWithInlineButtons(chatId, "Che genere vuoi? " +
                                     "puoi scegliere tra: ",
-                            List.of("Azione", "Avventura", "Animazione", "Biografico", "Commedia" , "Crimine" +
-                                    "Documentario", "Drammatico" , "Famiglia", "Fantasy", "Film-noir","Storico", "Horror"+
-                                    "Musical", "Mistero", "Romantico", "Fantascienza", "Sportivo", "Thriller"));
+                            List.of("Azione", "Avventura", "Animazione", "Biografico", "Commedia",
+                                    "Poliziesco", "Documentario", "Drammatico", "Per famiglie",
+                                    "Fantastico", "Noir", "Giochi a premi televisivo", "Storico",
+                                    "Horror", "Musica", "Musical", "Giallo", "Telegiornale",
+                                    "Reality", "Sentimentale", "Fantascienza", "Cortometraggio",
+                                    "Sportivo", "Talk Show", "Thriller", "Guerra", "Western"));
+
                     break;
                 default:
                     FilmsuTelegram(chatId, callbackData);
@@ -122,6 +132,21 @@ public class Bot extends TelegramLongPollingBot {
         }
     }
 
+
+
+    private static final Map<String, String> TRADUZIONE = Map.of(
+            "Azione", "action",
+            "Avventura", "Adventure",
+            "Animazione", "Animation",
+            "Biografico", "Biography",
+            "Commedia", "Comedy",
+            "Poliziesco", "crime",
+            "Guerra", "War"
+
+    );
+
+
+
     private void FilmsuTelegram(Long chatId, String genere){
         WebDriverManager.chromedriver().setup();
         ChromeOptions options= new ChromeOptions();
@@ -129,9 +154,10 @@ public class Bot extends TelegramLongPollingBot {
 
         WebScraper scraper=new WebScraper(driver);
         try{
-            List<String> TitoloFilm =scraper.Trovafilm(genere, 3);
+            String genereInglese = TRADUZIONE.getOrDefault(genere, genere);
+            List<String> TitoloFilm =scraper.Trovafilm(genereInglese, 3);
             for(String titolo: TitoloFilm){
-                sendMessage(chatId, titolo);
+                MessagioDiScelta(chatId, titolo);
             }
         }catch (InterruptedException e){
             e.printStackTrace();
@@ -141,7 +167,7 @@ public class Bot extends TelegramLongPollingBot {
 
     }
 
-    private void sendMessage(Long chatId, String text) {
+    private void MessagioDiScelta(Long chatId, String text) {
         SendMessage message = new SendMessage();
         message.setChatId(chatId.toString());
         message.setText(text);
@@ -166,3 +192,4 @@ public class Bot extends TelegramLongPollingBot {
     }
 
 }
+

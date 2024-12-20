@@ -1,6 +1,8 @@
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -16,9 +18,10 @@ public class WebScraper {
         String url = "https://www.imdb.com/search/title/?genres=" + genere;
 
         driver.get(url);
-        System.out.println("\nFetching movies for genre: " + genere + "\n");
+        System.out.println("\nFilm per genere: " + genere + "\n");
 
         int pageCount = 1;
+        List<String> TitoloFilm= new ArrayList<>();
 
         while (pageCount <= pagine) {
             System.out.println("Page " + pageCount + ":");
@@ -27,16 +30,18 @@ public class WebScraper {
 
 
             List<WebElement> movieElements = driver.findElements(By.cssSelector(".ipc-title__text"));
-            System.out.println("Found " + movieElements.size() + " movie(s).");
+            System.out.println("a " + movieElements.size() + " film(s).");
 
 
             if (movieElements.isEmpty()) {
-                System.out.println("No movies found on this page.");
+                System.out.println("No film .");
                 break;
             }
 
             for (WebElement movie : movieElements) {
-                System.out.println("Found movie: " + movie.getText());
+                String titolo= movie.getText();
+                System.out.println("Film trovato: " + movie.getText());
+                TitoloFilm.add(titolo);
             }
 
 
@@ -46,11 +51,11 @@ public class WebScraper {
                 nextButton.get(0).click();
                 pageCount++;
             } else {
-                System.out.println("No more pages found.");
+                System.out.println("No pagine.");
                 break;
             }
         }
-        return null;
+        return TitoloFilm;
     }
 }
 

@@ -1,3 +1,7 @@
+import io.github.bonigarcia.wdm.WebDriverManager;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -7,7 +11,9 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.Keyboard
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
-
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,6 +59,9 @@ public class Bot extends TelegramLongPollingBot {
                             List.of("Azione", "Avventura", "Animazione", "Biografico", "Commedia" , "Crimine" +
                                     "Documentario", "Drammatico" , "Famiglia", "Fantasy", "Film-noir","Storico", "Horror"+
                                     "Musical", "Mistero", "Romantico", "Fantascienza", "Sportivo", "Thriller"));
+                    break;
+                default:
+                    FilmsuTelegram(chatId, callbackData);
                     break;
             }
         }
@@ -112,6 +121,38 @@ public class Bot extends TelegramLongPollingBot {
             e.printStackTrace();
         }
     }
+
+    private void FilmsuTelegram(Long chatId, String genere){
+        WebDriverManager.chromedriver().setup();
+        ChromeOptions options= new ChromeOptions();
+        WebDriver driver= new ChromeDriver(options);
+
+        WebScraper scraper=new WebScraper(driver);
+        try{
+            List<String> TitoloFilm =scraper.Trovafilm(genere, 3);
+            for(String titolo: TitoloFilm){
+                sendMessage(chatId, titolo);
+            }
+        }catch (InterruptedException e){
+            e.printStackTrace();
+        }finally {
+            driver.quit();
+        }
+
+    }
+
+    private void sendMessage(Long chatId, String text) {
+        SendMessage message = new SendMessage();
+        message.setChatId(chatId.toString());
+        message.setText(text);
+
+        try {
+            execute(message);
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
+        }
+    }
+
 
 
     @Override

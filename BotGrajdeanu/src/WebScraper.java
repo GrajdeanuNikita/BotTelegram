@@ -12,7 +12,7 @@ public class WebScraper {
         this.driver= driver;
     }
 
-    public void Trovafilm(String genere, int pagine) throws InterruptedException{
+    public List<String> Trovafilm(String genere, int pagine) throws InterruptedException{
         String url = "https://www.imdb.com/search/title/?genres=" + genere;
 
         driver.get(url);
@@ -50,6 +50,7 @@ public class WebScraper {
                 break;
             }
         }
+        return null;
     }
 }
 

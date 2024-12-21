@@ -15,6 +15,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
 
@@ -33,8 +34,8 @@ public class Bot extends TelegramLongPollingBot {
                         "Benvenuto " + update.getMessage().getFrom().getFirstName() +
                                 "!!  Che cosa vuoi fare oggi?",
                         List.of("Cerchiamo un film!", "Film Da vedere", "Film visti"));
-            } else{
-                switch (TestoMessaggio.toLowerCase()){
+            } else {
+                switch (TestoMessaggio.toLowerCase()) {
                     case "cerchiamo un film!":
                         sendReplyWithInlineButtons(chatId, "Che genere vuoi? " +
                                         "puoi scegliere tra: ",
@@ -54,11 +55,11 @@ public class Bot extends TelegramLongPollingBot {
                         break;
                 }
             }
-        } else if (update.hasCallbackQuery()){
+        } else if (update.hasCallbackQuery()) {
             String callbackData = update.getCallbackQuery().getData();
             Long chatId = update.getCallbackQuery().getMessage().getChatId();
 
-            switch (callbackData.toLowerCase()){
+            switch (callbackData.toLowerCase()) {
                 case "cerchiamo un film!":
                     sendReplyWithInlineButtons(chatId, "Che genere vuoi? " +
                                     "puoi scegliere tra: ",
@@ -107,7 +108,7 @@ public class Bot extends TelegramLongPollingBot {
     }
 
 
-    private void sendReplyWithButtons(Long chatId, String testo, List<String> buttonLabels){
+    private void sendReplyWithButtons(Long chatId, String testo, List<String> buttonLabels) {
         SendMessage message = new SendMessage();
         message.setChatId(chatId.toString());
         message.setText(testo);
@@ -133,63 +134,80 @@ public class Bot extends TelegramLongPollingBot {
     }
 
 
+        private static final Map<String, String> TRADUZIONE;
+        static {
+            TRADUZIONE = new HashMap<>();
+            TRADUZIONE.put("Azione", "action");
+            TRADUZIONE.put("Avventura", "adventure");
+            TRADUZIONE.put("Animazione", "animation");
+            TRADUZIONE.put("Biografico", "biography");
+            TRADUZIONE.put("Commedia", "comedy");
+            TRADUZIONE.put("Poliziesco", "crime");
+            TRADUZIONE.put("Drammatico", "drama");
+            TRADUZIONE.put("Documentario", "documentary");
+            TRADUZIONE.put("Per famiglie", "family");
+            TRADUZIONE.put("Fantastico", "fantastic");
+            TRADUZIONE.put("Noir", "film-noir");
+            TRADUZIONE.put("Giochi a premi televisivi", "game-show");
+            TRADUZIONE.put("Storico", "history");
+            TRADUZIONE.put("Horror", "horror");
+            TRADUZIONE.put("Musica", "music");
+            TRADUZIONE.put("Musical", "musical");
+            TRADUZIONE.put("Giallo", "mystery");
+            TRADUZIONE.put("Telegiornale", "news");
+            TRADUZIONE.put("Reality", "reality-tv");
+            TRADUZIONE.put("Sentimentale", "romance");
+            TRADUZIONE.put("Fantascienza", "sci-fi");
+            TRADUZIONE.put("Cortometraggio", "short");
+            TRADUZIONE.put("Sportivo", "sport");
+            TRADUZIONE.put("Talkshow", "talk-show");
+            TRADUZIONE.put("Thriller", "thriller");
+            TRADUZIONE.put("Guerra", "war");
+            TRADUZIONE.put("Western", "western");
+        }
 
-    private static final Map<String, String> TRADUZIONE = Map.of(
-            "Azione", "action",
-            "Avventura", "Adventure",
-            "Animazione", "Animation",
-            "Biografico", "Biography",
-            "Commedia", "Comedy",
-            "Poliziesco", "crime",
-            "Guerra", "War"
 
-    );
+        private void FilmsuTelegram(Long chatId, String genere) {
+            WebDriverManager.chromedriver().setup();
+            ChromeOptions options = new ChromeOptions();
+            WebDriver driver = new ChromeDriver(options);
 
-
-
-    private void FilmsuTelegram(Long chatId, String genere){
-        WebDriverManager.chromedriver().setup();
-        ChromeOptions options= new ChromeOptions();
-        WebDriver driver= new ChromeDriver(options);
-
-        WebScraper scraper=new WebScraper(driver);
-        try{
-            String genereInglese = TRADUZIONE.getOrDefault(genere, genere);
-            List<String> TitoloFilm =scraper.Trovafilm(genereInglese, 3);
-            for(String titolo: TitoloFilm){
-                MessagioDiScelta(chatId, titolo);
+            WebScraper scraper = new WebScraper(driver);
+            try {
+                String genereInglese = TRADUZIONE.getOrDefault(genere, genere);
+                List<String> FILM = scraper.Trovafilm(genereInglese, 3);
+            for (String titolo : FILM) {
+                    MessagioDiScelta(chatId, titolo);
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } finally {
+                driver.quit();
             }
-        }catch (InterruptedException e){
-            e.printStackTrace();
-        }finally {
-            driver.quit();
+
         }
 
-    }
+        private void MessagioDiScelta(Long chatId, String text) {
+            SendMessage message = new SendMessage();
+            message.setChatId(chatId.toString());
+            message.setText(text);
 
-    private void MessagioDiScelta(Long chatId, String text) {
-        SendMessage message = new SendMessage();
-        message.setChatId(chatId.toString());
-        message.setText(text);
+            try {
+                execute(message);
+            } catch (TelegramApiException e) {
+                e.printStackTrace();
+            }
+        }
 
-        try {
-            execute(message);
-        } catch (TelegramApiException e) {
-            e.printStackTrace();
+
+        @Override
+        public String getBotUsername() {
+            return "GrajdeanuFilmBot";
+        }
+
+        @Override
+        public String getBotToken() {
+            return "7966978319:AAHFr0mevvfmPpWGDzDjIih6s5UFSmeaQr4";
         }
     }
-
-
-
-    @Override
-    public String getBotUsername() {
-        return "GrajdeanuFilmBot";
-    }
-
-    @Override
-    public String getBotToken() {
-        return "7966978319:AAHFr0mevvfmPpWGDzDjIih6s5UFSmeaQr4";
-    }
-
-}
 

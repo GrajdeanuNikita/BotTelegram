@@ -14,37 +14,28 @@ public class WebScraper {
         this.driver= driver;
     }
 
-    public List<String> Trovafilm(String genere, int pagine) throws InterruptedException{
+    public List<Film> Trovafilm(String genere) throws InterruptedException {
         String url = "https://www.imdb.com/search/title/?title_type=feature&genres=" + genere;
 
         driver.get(url);
         System.out.println("\nFilm per genere: " + genere + "\n");
 
-        int pageCount = 1;
-        List<String> FILM= new ArrayList<>();
-
-        while (pageCount <= pagine) {
-            System.out.println("Page " + pageCount + ":");
+        List<Film> FILM = new ArrayList<>();
 
             Thread.sleep(3000);
-
 
             List<WebElement> movieElements = driver.findElements(By.cssSelector("li.ipc-metadata-list-summary-item"));
             System.out.println("Ci sono  " + movieElements.size() + " film(s).");
 
 
             if (movieElements.isEmpty()) {
-                System.out.println("No film .");
-                break;
-            }
+                System.out.println("Nessun film trovato .");
+            }else{
+                for (WebElement movie : movieElements) {
 
-            for (WebElement movie : movieElements) {
-
-                try{
+                try {
 
                     String titolo = movie.findElement(By.cssSelector("h3.ipc-title__text")).getText();
-
-                    // Estrai la descrizione del film
                     String descrizione = movie.findElement(By.cssSelector("div.ipc-html-content-inner-div")).getText();
 
                     // Estrai l'anno di uscita
@@ -55,27 +46,48 @@ public class WebScraper {
 
                     // Recupera l'immagine (URL)
                     String immagine = movie.findElement(By.cssSelector("img.ipc-image")).getAttribute("src");
+                   // String filmUrl = movie.findElement(By.cssSelector("h3.ipc-title__text")).getAttribute("href");
+                   // List<String> cast = OttieniCast(filmUrl);
 
-
-                    Film filmdati = new Film(titolo,anno,descrizione,durata,immagine);
-                    FILM.add(filmdati.toString());
-
-                }catch (Exception e){
-                    System.out.println("Errore" );
+                    Film filmdati = new Film(titolo, anno, descrizione, durata, immagine);
+                    FILM.add(filmdati);
+                    System.out.println("Film trovato: " + filmdati.getTitolo());
+                    System.out.println("Dati durata: " + filmdati.getDurata());
+                    System.out.println("dato anno: " + filmdati.getAnno());
+                } catch (Exception e) {
+                    System.out.println("Errore" + e );
                 }
-            }
-
-            List<WebElement> nextButton = driver.findElements(By.cssSelector(".lister-page-next"));
-            System.out.println("Found next button: " + nextButton.size());
-            if (!nextButton.isEmpty()) {
-                nextButton.get(0).click();
-                pageCount++;
-            } else {
-                System.out.println("No pagine.");
-                break;
             }
         }
         return FILM;
     }
+
+    /*
+    public List<String> OttieniCast(String urlFilm) throws InterruptedException {
+        driver.get(urlFilm);
+        System.out.println("Estraendo i dati del cast per il film: " + urlFilm);
+
+        // Lista per memorizzare i nomi degli attori
+        List<String> cast = new ArrayList<>();
+
+        // Attendere che la pagina carichi correttamente
+        Thread.sleep(3000);
+
+        try {
+            // Trova la sezione del cast
+            List<WebElement> castElements = driver.findElements(By.cssSelector("a[data-testid='title-cast-item__actor']"));
+
+            // Estrai il nome degli attori
+            for (WebElement actor : castElements) {
+                String actorName = actor.getText();
+                cast.add(actorName);
+                System.out.println("Attore: " + actorName);
+            }
+        } catch (Exception e) {
+            System.out.println("Errore nell'estrazione del cast: " + e.getMessage());
+        }
+
+        return cast;
+    }*/
 }
 

@@ -10,8 +10,10 @@ import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 public class Main {
    public static void main(String[] args){
        WebDriverManager.chromedriver().setup();
-
-
+       Database db = new Database();
+       if (!db.verificaConnessioneDatabase()) {
+           return; // Esce se la connessione fallisce
+       }
        try {
 
            //Creazione del bot

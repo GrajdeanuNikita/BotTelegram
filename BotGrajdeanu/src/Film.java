@@ -1,9 +1,12 @@
+import java.util.List;
+
 public class Film {
     private String titolo;
     private String anno;
     private String descrizione;
     private String durata;
     private String immagine;
+   // private List<String> cast;
 
     public Film(String titolo, String anno, String descrizione, String durata, String immagine) {
         this.titolo = titolo;
@@ -11,6 +14,27 @@ public class Film {
         this.descrizione = descrizione;
         this.durata = durata;
         this.immagine = immagine;
+        //this.cast= cast;
+    }
+
+    public void setTitolo(String titolo) {
+        this.titolo = titolo;
+    }
+
+    public void setImmagine(String immagine) {
+        this.immagine = immagine;
+    }
+
+    public void setDurata(String durata) {
+        this.durata = durata;
+    }
+
+    public void setDescrizione(String descrizione) {
+        this.descrizione = descrizione;
+    }
+
+    public void setAnno(String anno) {
+        this.anno = anno;
     }
 
     public String getTitolo() {
@@ -33,14 +57,17 @@ public class Film {
         return immagine;
     }
 
+    /*
+    public List<String> getCast() {
+        return cast;
+    }*/
+
     @Override
     public String toString() {
-        return "Film{" +
-                titolo +  '\'' + "       "+
-                ", anno='" + anno + '\'' + "                 "+
-                ", descrizione='" + descrizione + '\'' + "  "+
-                ", durata='" + durata + '\'' +
-                ", immagine='" + immagine + '\'' +
-                '}';
+        return titolo +    "       "+
+                " Anno:" + anno + '\'' + "                 "+
+                " Descrizione:" + descrizione +"\n"  +
+                " durata='" + durata +
+                "Immagine : '" + immagine  ;
     }
 }

@@ -12,7 +12,7 @@ public class Main {
        WebDriverManager.chromedriver().setup();
        Database db = new Database();
        if (!db.verificaConnessioneDatabase()) {
-           return; // Esce se la connessione fallisce
+           return;
        }
        try {
 

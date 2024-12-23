@@ -64,7 +64,8 @@ public class Film {
 
     @Override
     public String toString() {
-        return titolo +    "       "+
+        return
+                titolo +    "       "+
                 " Anno:" + anno + '\'' + "                 "+
                 " Descrizione:" + descrizione +"\n"  +
                 " durata='" + durata +

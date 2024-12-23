@@ -37,14 +37,8 @@ public class WebScraper {
 
                     String titolo = movie.findElement(By.cssSelector("h3.ipc-title__text")).getText();
                     String descrizione = movie.findElement(By.cssSelector("div.ipc-html-content-inner-div")).getText();
-
-                    // Estrai l'anno di uscita
                     String anno = movie.findElement(By.cssSelector("span.sc-300a8231-7")).getText();
-
-                    // Estrai la durata
                     String durata = movie.findElement(By.cssSelector("span.sc-300a8231-7")).getText();
-
-                    // Recupera l'immagine (URL)
                     String immagine = movie.findElement(By.cssSelector("img.ipc-image")).getAttribute("src");
                    // String filmUrl = movie.findElement(By.cssSelector("h3.ipc-title__text")).getAttribute("href");
                    // List<String> cast = OttieniCast(filmUrl);
@@ -67,17 +61,16 @@ public class WebScraper {
         driver.get(urlFilm);
         System.out.println("Estraendo i dati del cast per il film: " + urlFilm);
 
-        // Lista per memorizzare i nomi degli attori
+
         List<String> cast = new ArrayList<>();
 
-        // Attendere che la pagina carichi correttamente
+
         Thread.sleep(3000);
 
         try {
-            // Trova la sezione del cast
+
             List<WebElement> castElements = driver.findElements(By.cssSelector("a[data-testid='title-cast-item__actor']"));
 
-            // Estrai il nome degli attori
             for (WebElement actor : castElements) {
                 String actorName = actor.getText();
                 cast.add(actorName);
